@@ -1,18 +1,26 @@
-<script>
-  const eventSource = new EventSource("/logs/" + "${data.deployment_id}");
-  let clientIdHeaderValue = "";
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deployment Logs</title>
+  </head>
+  <body>
+    <script>
+      const eventSource = new EventSource("/logs/" + deploymentId);
+      eventSource.onmessage = function (event) {
+        var logEntry = document.createElement("li");
+        logEntry.innerText = event.data;
+        document.getElementById("logs").prepend(logEntry);
+      };
+    </script>
 
-  eventSource.onopen = function (event) {
-    clientIdHeaderValue = eventSource.url.split("=")[1]; // Extract client ID from the URL
+    <hr />
+    <h2>Deployment: <span id="deployment-id"></span></h2>
+    <ul id="logs"></ul>
 
-    // Send a ping every 15 seconds to keep the connection alive
-    setInterval(function () {
-      fetch("/ping", {
-        method: "POST",
-        headers: {
-          "X-Client-ID": clientIdHeaderValue,
-        },
-      });
-    }, 15000);
-  };
-</script>
+    <script>
+      document.getElementById("deployment-id").innerText = deploymentId;
+    </script>
+  </body>
+</html>

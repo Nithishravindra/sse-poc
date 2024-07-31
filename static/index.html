@@ -3,11 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome</title>
+    <title>Deployment</title>
   </head>
   <body>
-    <h1>Welcome to my Go Server</h1>
-    <p>This is the index.html file being served.</p>
-    <p>This is the index.html file being served.</p>
+    <h1>Deployment</h1>
+    <form action="/deployment" method="post">
+      <button type="submit">Start Deployment</button>
+    </form>
+    <hr />
+    <h2>Existing Deployments</h2>
+    <ul>
+      {{range .Files}}
+      <li onclick="redirectToFile('{{.}}')">{{.}}</li>
+      {{end}}
+    </ul>
+    <script>
+      function redirectToFile(fileName) {
+        window.location.href = "/deployment/" + fileName;
+      }
+    </script>
   </body>
 </html>
